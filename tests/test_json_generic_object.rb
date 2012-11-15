@@ -32,4 +32,15 @@ class TestJSONGenericObject < Test::Unit::TestCase
       l = JSON('{ "a": { "b": 2 } }', :object_class => GenericObject)
     assert_equal 2, l.a.b
   end
+
+  def test_from_hash
+    result  = GenericObject.from_hash(
+      :foo => { :bar => { :baz => true }, :quux => [ { :foobar => true } ] })
+    assert_kind_of GenericObject, result.foo
+    assert_kind_of GenericObject, result.foo.bar
+    assert_equal   true, result.foo.bar.baz
+    assert_kind_of GenericObject, result.foo.quux.first
+    assert_equal   true, result.foo.quux.first.foobar
+    assert_equal   true, GenericObject.from_hash(true)
+  end
 end
